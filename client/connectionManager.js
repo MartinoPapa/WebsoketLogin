@@ -6,6 +6,10 @@ ws.onmessage = function(e) {
   document.getElementById("messages").innerHTML += `<p>${e.currentTarget.url}: "${e.data}"</p>`
 };
 
-function Login(name){
-    ws.send("newuser:"+name);
+function Login(name, password){
+    ws.send("user:"+name+":"+password);
+}   
+
+function Register(name, password){
+  ws.send("new:"+name+":"+password);
 }   

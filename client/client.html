@@ -6,8 +6,9 @@
 </head>
 <body>
     <input type="txt" id="name" placeholder="name">
-    <button onclick="Login(document.getElementById('name').value)">login</button>
-    <br>
+    <input type="password" id="psw" placeholder="password">
+    <button onclick="Login(document.getElementById('name').value, document.getElementById('psw').value)">login</button>
+    <button onclick="Register(document.getElementById('name').value, document.getElementById('psw').value)">register</button>
     <div id="messages">
 
     </div>
