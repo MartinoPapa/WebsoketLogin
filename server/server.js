@@ -12,6 +12,7 @@ console.log("server is listening on port " + port)
 const wsServer = new WebSocketServer({
     httpServer: server
 });
+
 wsServer.on('request', function (request) {
     const connection = request.accept(null, request.origin);
     connection.on('message', function (message) {
@@ -53,7 +54,7 @@ function messageManager(messageRecived) {
 
 function addUser(username, password) {
     var index = users.findIndex(p => p.username == username);
-    if (index==-1) {
+    if (index==-1 && username != "") {
         users.push({username, password});
         fs.writeFileSync("./users.json", JSON.stringify(users), 'utf8');
         return true;

@@ -3,7 +3,7 @@ ws.onopen = function() {
     console.log('Connected to '+ ws.url);
 };
 ws.onmessage = function(e) {
-  document.getElementById("messages").innerHTML += `<p>${e.currentTarget.url}: "${e.data}"</p>`
+  console.log(`${e.currentTarget.url}: "${e.data}"`);
 };
 
 function Login(name, password){

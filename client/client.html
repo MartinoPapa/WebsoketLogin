@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebSocket Playground</title>
+  <title>Login Form</title>
+  <link href="./style.css" rel="stylesheet" type="text/css">
   <script src="connectionManager.js"></script>
 </head>
 <body>
-    <input type="txt" id="name" placeholder="name">
-    <input type="password" id="psw" placeholder="password">
+  <div class="container">
+    <input type="txt" id="name" placeholder="name"><br>
+    <input type="password" id="psw" placeholder="password"><br>
     <button onclick="Login(document.getElementById('name').value, document.getElementById('psw').value)">login</button>
     <button onclick="Register(document.getElementById('name').value, document.getElementById('psw').value)">register</button>
-    <div id="messages">
-
-    </div>
+    
+  </div>
 </body>
 </html>
