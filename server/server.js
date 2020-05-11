@@ -3,12 +3,17 @@ const port = 8080;
 const WebSocketServer = require('websocket').server;
 const server = http.createServer();
 var fs = require('fs');
-
 var json = require("./users.json");
 var users = json;
 
+const msgTypes = {
+    Register: 0,
+    Login: 1
+}
+
 server.listen(port);
 console.log("server is listening on port " + port)
+
 const wsServer = new WebSocketServer({
     httpServer: server
 });
@@ -24,47 +29,47 @@ wsServer.on('request', function (request) {
 });
 
 function messageManager(messageRecived) {
+    var convertedMessage = JSON.parse(messageRecived);
     var answer;
-    var username = messageRecived.split(":")[1];
-    var password = messageRecived.split(":")[2];
-    if (messageRecived.includes("new")) {
-        if (addUser(username, password)) {
-            answer = "registred successfully as " + username;
-        }
-        else {
-            answer = username + " is alredy taken";
-        }
-    }
-    else {
-        if (messageRecived.includes("user")) {
-            if (checkuser(username, password)) {
-                answer = "logged successfully as " + username;
+    switch (convertedMessage.type) {
+        case msgTypes.Login:
+            if (checkuser(convertedMessage.username, convertedMessage.password)) {
+                answer = "logged successfully as " + convertedMessage.username;
             }
             else {
                 answer = "wrong credentials";
-            }        
-        }
-        else {
-            answer = messageRecived;
-        }
+            }
+            break;
+        case msgTypes.Register:
+            if (addUser(convertedMessage.username, convertedMessage.password)) {
+                answer = "registred successfully as " + convertedMessage.username;
+            }
+            else {
+                answer = convertedMessage.username + " is alredy taken";
+            }
+            break;
+        default:
+            answer = "message type not recognized";
+            break;
+
     }
-    console.log("update list", users);
+    console.log("updated list", users);
     return answer;
 }
 
 function addUser(username, password) {
     var index = users.findIndex(p => p.username == username);
-    if (index==-1 && username != "") {
-        users.push({username, password});
+    if (index == -1 && username != "") {
+        users.push({ username, password });
         fs.writeFileSync("./users.json", JSON.stringify(users), 'utf8');
         return true;
     }
     return false;
 }
 
-function checkuser(username, password){
+function checkuser(username, password) {
     var index = users.findIndex(p => p.username == username);
-    if (index!=-1)
-        if(password==users[index].password) return true
+    if (index != -1)
+        if (password == users[index].password) return true
     return false;
 }
