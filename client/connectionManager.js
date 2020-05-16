@@ -6,12 +6,17 @@ const msgTypes = {
   Login: 1
 }
 
+const msgAnswers = {
+  Error: 0,
+  Confirmed: 1
+}
+
 const ws = new WebSocket('ws://localhost:8080/');
-ws.onopen = function() {
+ws.onopen = function() {  
     console.log('Connected to '+ ws.url);
 };
 ws.onmessage = function(e) {
-  console.log(`${e.currentTarget.url}: "${e.data}"`);
+  console.log(JSON.parse(e.data));
 };
 
 function Login(name, password){

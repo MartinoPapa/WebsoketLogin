@@ -11,6 +11,11 @@ const msgTypes = {
     Login: 1
 }
 
+const msgAnswers = {
+    Error: 0,
+    Confirmed: 1
+}
+
 server.listen(port);
 console.log("server is listening on port " + port)
 
@@ -28,28 +33,42 @@ wsServer.on('request', function (request) {
     });
 });
 
+function BuildAnswers(msgAnswer, description, text){
+    var msg = {
+        "msgAnswer": msgAnswer,
+        "description": description,
+        "text": text
+    }
+    return JSON.stringify(msg);
+}
+
 function messageManager(messageRecived) {
     var convertedMessage = JSON.parse(messageRecived);
     var answer;
     switch (convertedMessage.type) {
         case msgTypes.Login:
-            if (checkuser(convertedMessage.username, convertedMessage.password)) {
+            if (checkuser(convertedMessage.username, convertedMessage.password)) {           
                 answer = "logged successfully as " + convertedMessage.username;
+                answer = BuildAnswers(msgAnswers.Confirmed, answer);
             }
             else {
                 answer = "wrong credentials";
+                answer = BuildAnswers(msgAnswers.Error, answer);
             }
             break;
         case msgTypes.Register:
             if (addUser(convertedMessage.username, convertedMessage.password)) {
                 answer = "registred successfully as " + convertedMessage.username;
+                answer = BuildAnswers(msgAnswers.Confirmed, answer);
             }
             else {
                 answer = convertedMessage.username + " is alredy taken";
+                answer = BuildAnswers(msgAnswers.Error, answer);
             }
             break;
         default:
             answer = "message type not recognized";
+            answer = BuildAnswers(msgAnswers.Error, answer);
             break;
 
     }
